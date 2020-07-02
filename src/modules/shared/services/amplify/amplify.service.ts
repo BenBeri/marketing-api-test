@@ -1,6 +1,7 @@
 import {HttpException, HttpService, HttpStatus, Injectable} from "@nestjs/common";
-import {ConfigService} from "../../../config/config.service";
+import {ConfigService} from "../../../../config/config.service";
 import {AxiosResponse} from "axios";
+import {GetCampaignsResponseDto} from "./dtos/get-campaigns-response.dto";
 
 @Injectable()
 export class AmplifyService {
@@ -15,7 +16,7 @@ export class AmplifyService {
      * Fetching all campaigns by marketer id
      * @param marketerId    string  The marketer ID to fetch campaigns for
      */
-    public async getCampaginsForMarketer(marketerId: string) {
+    public async getCampaginsForMarketer(marketerId: string): Promise<GetCampaignsResponseDto[]> {
         const accessToken: string = this.configService.accessToken;
         const baseUrl: string = this.configService.amplifyApiBaseUrl;
 
@@ -38,7 +39,6 @@ export class AmplifyService {
             throw new HttpException('Something went wrong while fetching campaigns',
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return response.data;
+        return response.data.campaigns;
     }
 }

@@ -1,4 +1,4 @@
-import {Column, Entity, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
 import {CampaignContentType} from "../../enums/campaign-content-type.enum";
 import {BudgetType} from "../../enums/budget-type.enum";
 import {BudgetPacingType} from "../../enums/budget-pacing-type.enum";
@@ -10,11 +10,12 @@ export class BudgetEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(type => CampaignEntity, campaign => campaign.budget)
+    @OneToOne(type => CampaignEntity, campaign => campaign.budget, {onDelete: 'CASCADE'})
+    @JoinColumn()
     campaign: CampaignEntity;
 
     @Column({type: "text"})
-    budgetId: string;
+    amplifyBudgetId: string;
 
     @Column({type: "text"})
     name: string;
@@ -40,9 +41,9 @@ export class BudgetEntity {
     @Column({type: "boolean"})
     runForever: boolean;
 
-    @Column({type: "enum", enum: BudgetType})
+    @Column({enum: BudgetType, default: BudgetType.DAILY})
     type: BudgetType;
 
-    @Column({type: "enum", enum: BudgetPacingType})
+    @Column({enum: BudgetPacingType})
     pacing: BudgetPacingType;
 }

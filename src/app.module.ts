@@ -12,8 +12,9 @@ import {TerminusOptionsService} from './modules/app/services/terminus-options.se
 import {TerminusModule} from '@nestjs/terminus';
 import {MarketModule} from './modules/market/market.module';
 import {LoggerModule} from './logger/logger.module';
-import {ScheduleModule} from '@nestjs/schedule';
 import {CampaignScheduler} from "./schedulers/campaign.scheduler";
+import {CronSchedulersModule} from "./schedulers/cron-schedulers.module";
+import {ScheduleModule} from '@nestjs/schedule';
 
 @Module({
     imports: [
@@ -27,7 +28,8 @@ import {CampaignScheduler} from "./schedulers/campaign.scheduler";
         }),
         ConfigModule,
         LoggerModule,
-        MarketModule,
+        forwardRef(() => MarketModule),
+        CronSchedulersModule,
         ScheduleModule.forRoot(),
     ],
     providers: [
@@ -42,8 +44,6 @@ import {CampaignScheduler} from "./schedulers/campaign.scheduler";
             useClass: TimeoutInterceptor,
         },
         AppHealthIndicator,
-        CampaignScheduler,
-
     ],
     exports: [AppHealthIndicator],
 })

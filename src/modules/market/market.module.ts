@@ -6,6 +6,8 @@ import {ConfigModule} from '../../config/config.module';
 import {BudgetEntity} from "./models/domain/budget.entity";
 import {CampaignEntity} from "./models/domain/campaign.entity";
 import {SharedModule} from "../shared/shared.module";
+import {CampaignRepository} from "./repositories/campaign.repository";
+import {CampaignService} from "./services/campaign.service";
 
 @Module({
     imports: [
@@ -13,6 +15,8 @@ import {SharedModule} from "../shared/shared.module";
             [
                 BudgetEntity,
                 CampaignEntity,
+
+                CampaignRepository,
             ]
         ),
         GuardModule,
@@ -20,8 +24,12 @@ import {SharedModule} from "../shared/shared.module";
         SharedModule,
     ],
     controllers: [CampaignController],
-    providers: [],
-    exports: [],
+    providers: [
+        CampaignService,
+    ],
+    exports: [
+        CampaignService,
+    ],
 })
 export class MarketModule {
 }

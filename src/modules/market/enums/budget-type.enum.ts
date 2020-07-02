@@ -1,3 +1,3 @@
 export enum BudgetType {
-    DAILY
+    DAILY = 'DAILY',
 }

@@ -1,11 +1,16 @@
-import {Controller} from '@nestjs/common';
+import {Controller, Get} from '@nestjs/common';
 import {AppLogger} from '../../../logger/logger';
 
 @Controller('campaign')
 export class CampaignController {
   protected TAG: string = `${this.constructor.name}`;
 
-  constructor() {
+  constructor(
+  ) {
     AppLogger.log('Init', this.TAG);
+  }
+
+  @Get()
+  public async test() {
   }
 }

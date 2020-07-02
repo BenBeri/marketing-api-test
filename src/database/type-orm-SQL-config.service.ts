@@ -10,7 +10,7 @@ export class TypeOrmSQLConfigService implements TypeOrmOptionsFactory {
     return {
       name: 'postgres',
       type: 'postgres',
-      synchronize: false,
+      synchronize: true,
       logging: true,
       host: this.configService.host,
       port: this.configService.port,

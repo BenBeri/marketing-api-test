@@ -41,6 +41,7 @@ export class ConfigService {
       DB_SCHEMA: Joi.string(),
       AMPLIFY_API_MARKETER_ID: Joi.string(),
       AMPLIFY_API_ACCESS_TOKEN: Joi.string(),
+      AMPLIFY_API_BASE_URL: Joi.string(),
       PORT: Joi.number(),
     });
 
@@ -72,5 +73,17 @@ export class ConfigService {
 
   get database(): string {
     return String( process.env.DB_SCHEMA || this.envConfig.DB_SCHEMA);
+  }
+
+  get accessToken(): string {
+    return String(process.env.AMPLIFY_API_ACCESS_TOKEN || this.envConfig.AMPLIFY_API_ACCESS_TOKEN);
+  }
+
+  get marketerId(): string {
+    return String(process.env.AMPLIFY_API_MARKETER_ID || this.envConfig.AMPLIFY_API_MARKETER_ID);
+  }
+
+  get amplifyApiBaseUrl(): string {
+    return String(process.env.AMPLIFY_API_BASE_URL || this.envConfig.AMPLIFY_API_BASE_URL);
   }
 }

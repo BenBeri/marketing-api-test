@@ -18,6 +18,8 @@ Installation
 Endpoints:
 
 `api/campaign/<campaign-id>/` - Get single campaign data
+
 `api/campaign/download-csv` - Downloads CSV of all campaigns including section ids.
+
 `api/campaign/analytics/minimal-spend` - Gets all campaigns with minimal spending based on `campaign.liveStatus.amountSpent`
 

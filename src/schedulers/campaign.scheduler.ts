@@ -18,7 +18,6 @@ export class CampaignScheduler {
 
     @Timeout(1000)
     public async loadCampaigns() {
-        return;
         let allCampaigns: GetCampaignsResponseDto[] = await this.amplifyService
             .getCampaginsForMarketer(this.configService.marketerId);
 

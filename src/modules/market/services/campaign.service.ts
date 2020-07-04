@@ -4,11 +4,15 @@ import {CampaignRepository} from "../repositories/campaign.repository";
 import {GetCampaignsResponseDto} from "../../shared/services/amplify/dtos/get-campaigns-response.dto";
 import {transformCampaignsDtosToEntities} from "../transformers/campaign.transformer";
 import {GetCampaignSectionsResponseDto} from "../../shared/services/amplify/dtos/get-campaign-sections-response.dto";
+import { CampaignLiveStatusRepository } from '../repositories/campaign-live-status.repository';
 
 @Injectable()
 export class CampaignService {
 
-    public constructor(private readonly campaignRepository: CampaignRepository) {}
+    public constructor(
+      private readonly campaignRepository: CampaignRepository,
+      private readonly campaignLiveStatusRepository: CampaignLiveStatusRepository,
+    ) {}
 
     public async getAllCampaignsAndDelete() {
         const campaigns: CampaignEntity[] = await this.campaignRepository.getAll();
@@ -38,6 +42,7 @@ export class CampaignService {
     }
 
     public async addAllCampaigns(allCampaigns: GetCampaignsResponseDto[]) {
+        await this.campaignLiveStatusRepository.deleteAll();
         const campaigns: CampaignEntity[] = transformCampaignsDtosToEntities(allCampaigns);
         await this.campaignRepository.addAll(campaigns);
     }

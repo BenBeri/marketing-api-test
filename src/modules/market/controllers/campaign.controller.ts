@@ -1,10 +1,12 @@
-import {Controller, Get, Header, Param, Query, Res} from '@nestjs/common';
+import { Controller, Get, Header, Param, Query, Res, UseGuards } from '@nestjs/common';
 import {AppLogger} from '../../../logger/logger';
 import {CampaignProvider} from "../providers/campaign.provider";
 import {ApiParams} from "./api-params.enum";
 import {GetMinimumSpendCampaignsRequestDto} from "../models/dto/get-minimum-spend-campaigns-request.dto";
+import { DataUpdateCheckGuard } from '../../../guards/data-update-check.guard';
 
 @Controller('campaign')
+@UseGuards(DataUpdateCheckGuard)
 export class CampaignController {
   protected TAG: string = `${this.constructor.name}`;
 
@@ -16,7 +18,7 @@ export class CampaignController {
 
   @Get(`:${ApiParams.CAMPAIGN_ID}`)
   public async getCampaignInformation(@Param(ApiParams.CAMPAIGN_ID) campaignId: string) {
-    return await this.campaignProvider.getCampaignInformationById(campaignId)
+    return await this.campaignProvider.getCampaignInformationById(campaignId);
   }
 
   @Get('download-csv')
@@ -31,7 +33,6 @@ export class CampaignController {
 
   @Get(`analytics/minimal-spend`)
   public async getCampaignsWithMinimalSpend(@Query() queryData: GetMinimumSpendCampaignsRequestDto): Promise<any> {
-    console.log('test212121', queryData.minSpend);
     return await this.campaignProvider.getCampaignsForMinimumSpend(Number(queryData.minSpend));
   }
 }

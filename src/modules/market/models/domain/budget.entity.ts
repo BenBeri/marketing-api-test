@@ -1,9 +1,8 @@
-import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
-import {CampaignContentType} from "../../enums/campaign-content-type.enum";
-import {BudgetType} from "../../enums/budget-type.enum";
-import {BudgetPacingType} from "../../enums/budget-pacing-type.enum";
-import {CampaignEntity} from "./campaign.entity";
-import {SectionEntity} from "./section.entity";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { BudgetType } from '../../enums/budget-type.enum';
+import { BudgetPacingType } from '../../enums/budget-pacing-type.enum';
+import { CampaignEntity } from './campaign.entity';
+import { SectionEntity } from './section.entity';
 
 @Entity()
 export class BudgetEntity {

@@ -65,7 +65,6 @@ export const transformCampaignDtoToEntity = (dto: GetCampaignsResponseDto): Camp
     sections.push(sectionEntity);
   }
 
-  console.log(sections, sections.length);
 
   budget.sections = sections;
 

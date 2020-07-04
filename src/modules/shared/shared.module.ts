@@ -8,10 +8,10 @@ import {AmplifyService} from "./services/amplify/amplify.service";
         HttpModule,
     ],
     providers: [
-        AmplifyService
+        AmplifyService,
     ],
     exports: [
-        AmplifyService
+        AmplifyService,
     ],
 })
 

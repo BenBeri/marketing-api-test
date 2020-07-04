@@ -8,12 +8,13 @@ import {MarketModule} from "../modules/market/market.module";
     imports: [
         forwardRef(() => ConfigModule),
         SharedModule,
-        MarketModule,
+        forwardRef(() => MarketModule),
     ],
     providers: [
-        CampaignScheduler
+        CampaignScheduler,
     ],
     exports: [
+      CampaignScheduler,
     ],
 })
 

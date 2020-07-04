@@ -1,23 +1,26 @@
-import {Injectable} from "@nestjs/common";
-import {Timeout} from '@nestjs/schedule';
-import {AmplifyService} from "../modules/shared/services/amplify/amplify.service";
-import {ConfigService} from "../config/config.service";
-import {GetCampaignsResponseDto} from "../modules/shared/services/amplify/dtos/get-campaigns-response.dto";
-import {CampaignService} from "../modules/market/services/campaign.service";
-import {GetCampaignSectionsResponseDto} from "../modules/shared/services/amplify/dtos/get-campaign-sections-response.dto";
+import { Injectable } from '@nestjs/common';
+import { Timeout } from '@nestjs/schedule';
+import { AmplifyService } from '../modules/shared/services/amplify/amplify.service';
+import { ConfigService } from '../config/config.service';
+import { GetCampaignsResponseDto } from '../modules/shared/services/amplify/dtos/get-campaigns-response.dto';
+import { GetCampaignSectionsResponseDto } from '../modules/shared/services/amplify/dtos/get-campaign-sections-response.dto';
+import { CampaignProvider } from '../modules/market/providers/campaign.provider';
 
 @Injectable()
 export class CampaignScheduler {
 
+    private isSchedulingDataUpdate: boolean = false;
+
     public constructor(
         private readonly configService: ConfigService,
         private readonly amplifyService: AmplifyService,
-        private readonly campaignService: CampaignService,
+        private readonly campaignProvider: CampaignProvider,
     ) {
     }
 
     @Timeout(1000)
     public async loadCampaigns() {
+        this.isSchedulingDataUpdate = true;
         let allCampaigns: GetCampaignsResponseDto[] = await this.amplifyService
             .getCampaginsForMarketer(this.configService.marketerId);
 
@@ -47,8 +50,13 @@ export class CampaignScheduler {
         }
 
         console.log('Finished loading data, now pushing to database ...');
-        await this.campaignService.addAllCampaigns(allCampaigns);
+        await this.campaignProvider.addAllCampaigns(allCampaigns);
         console.log('Caching process done!');
+        this.isSchedulingDataUpdate = false;
 
+    }
+
+    public isCurrentlyLoadingData() {
+        return this.isSchedulingDataUpdate;
     }
 }

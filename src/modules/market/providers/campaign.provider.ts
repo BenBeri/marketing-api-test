@@ -5,6 +5,7 @@ import {CampaignCsvData} from "../interfaces/campaign-csv-data.interface";
 import {transformCampaignDataToCsvData} from "../transformers/campaign.transformer";
 import {CampaignEntity} from "../models/domain/campaign.entity";
 import {PUBLIC_ROOT} from "../../../main";
+import { GetCampaignsResponseDto } from '../../shared/services/amplify/dtos/get-campaigns-response.dto';
 
 @Injectable()
 export class CampaignProvider {
@@ -54,5 +55,9 @@ export class CampaignProvider {
 
     public async getCampaignsForMinimumSpend(minSpend: number) {
         return await this.campaignService.getCampaignsWithMinimumSpend(minSpend);
+    }
+
+    public async addAllCampaigns(allCampaigns: GetCampaignsResponseDto[]) {
+        await this.campaignService.addAllCampaigns(allCampaigns);
     }
 }

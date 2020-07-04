@@ -5,7 +5,7 @@ import {
     JoinColumn,
     OneToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from "typeorm";
 import {CampaignEntity} from "./campaign.entity";
 

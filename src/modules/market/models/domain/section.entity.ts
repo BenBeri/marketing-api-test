@@ -5,7 +5,7 @@ import {
     ManyToOne,
     PrimaryColumn,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from "typeorm";
 import {BudgetEntity} from "./budget.entity";
 import {SectionMetadata} from "../../../shared/services/amplify/interfaces/section-metadata.interface";

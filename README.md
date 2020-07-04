@@ -13,3 +13,11 @@ Installation
 4. Run `PORT=3000 npm run start` command at the root directory.
 5. Wait for the Scheduler to load all data from the API. Since the API has limitations, fetching data will take some time with breaks.
 6. After finishing loading, you are set up!
+
+
+Endpoints:
+
+`api/campaign/<campaign-id>/` - Get single campaign data
+`api/campaign/download-csv` - Downloads CSV of all campaigns including section ids.
+`api/campaign/analytics/minimal-spend` - Gets all campaigns with minimal spending based on `campaign.liveStatus.amountSpent`
+

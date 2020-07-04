@@ -1,26 +1,48 @@
 import {Injectable} from "@nestjs/common";
-import {GetCampaignsResponseDto} from "../../shared/services/amplify/dtos/get-campaigns-response.dto";
 import {CampaignEntity} from "../models/domain/campaign.entity";
-import {transformCampaignsDtosToEntities} from "../transformers/campaign.transformer";
 import {CampaignRepository} from "../repositories/campaign.repository";
+import {GetCampaignsResponseDto} from "../../shared/services/amplify/dtos/get-campaigns-response.dto";
+import {transformCampaignsDtosToEntities} from "../transformers/campaign.transformer";
+import {GetCampaignSectionsResponseDto} from "../../shared/services/amplify/dtos/get-campaign-sections-response.dto";
 
 @Injectable()
 export class CampaignService {
 
     public constructor(private readonly campaignRepository: CampaignRepository) {}
 
-    public async addOrUpdateCampaigns(campaignDtos: GetCampaignsResponseDto[]) {
-        const oldCampaigns: CampaignEntity[] = await this.campaignRepository.getAll();
+    public async getAllCampaignsAndDelete() {
+        const campaigns: CampaignEntity[] = await this.campaignRepository.getAll();
         await this.campaignRepository.deleteAll();
 
-        const campaigns: CampaignEntity[] = transformCampaignsDtosToEntities(campaignDtos);
+        return campaigns;
+    }
 
-        try {
-            return await this.campaignRepository.addAll(campaigns);
-        } catch (e) {
-            console.log('Failed to update campaigns', e.message);
-            await this.campaignRepository.addAll(oldCampaigns);
-            // TODO save to local file as well as error log with values
-        }
+    public async addAll(campaigns: CampaignEntity[]) {
+        return await this.campaignRepository.addAll(campaigns);
+    }
+
+    public async getCampaign(id: string): Promise<CampaignEntity> {
+        return await this.campaignRepository.getCampaignById(id)
+    }
+
+    public async getCampaignWithBudgetSections(id: string) {
+        return await this.campaignRepository.getCampaignByIdWithSections(id)
+    }
+
+    public async getAllCampaignsWithBudgetSections() {
+        return await this.campaignRepository.getAll(['budget', 'budget.sections'])
+    }
+
+    public async getLastYearCampaigns() {
+        return await this.campaignRepository.getLastYearCampaigns();
+    }
+
+    public async addAllCampaigns(allCampaigns: GetCampaignsResponseDto[]) {
+        const campaigns: CampaignEntity[] = transformCampaignsDtosToEntities(allCampaigns);
+        await this.campaignRepository.addAll(campaigns);
+    }
+
+    public async getCampaignsWithMinimumSpend(minSpend: number) {
+        return await this.campaignRepository.getAllWithMinimumSpend(minSpend);
     }
 }

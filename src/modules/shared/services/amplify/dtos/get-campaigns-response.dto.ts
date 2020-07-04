@@ -1,6 +1,7 @@
 import {CampaignContentType} from "../../../../market/enums/campaign-content-type.enum";
 import {BudgetType} from "../../../../market/enums/budget-type.enum";
 import {BudgetPacingType} from "../../../../market/enums/budget-pacing-type.enum";
+import {GetCampaignSectionsResponseDto} from "./get-campaign-sections-response.dto";
 
 export interface GetCampaignsResponseDto {
     id: string;
@@ -37,6 +38,7 @@ export interface GetCampaignsResponseDto {
         runForever: boolean;
         type: BudgetType;
         pacing: BudgetPacingType;
+        sections?: GetCampaignSectionsResponseDto[],
     };
     suffixTrackingCode: string;
     prefixTrackingCode: object;
@@ -53,4 +55,5 @@ export interface GetCampaignsResponseDto {
         enabled: boolean;
     };
     objective: string;
+    amplifyBudgetId?: string;
 }

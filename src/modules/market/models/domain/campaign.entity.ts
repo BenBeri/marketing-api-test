@@ -1,15 +1,23 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryColumn,
+    PrimaryGeneratedColumn
+} from "typeorm";
 import {CampaignContentType} from "../../enums/campaign-content-type.enum";
 import {BudgetEntity} from "./budget.entity";
+import {CampaignLiveStatus} from "../../../shared/services/amplify/interfaces/campaign-live-status.interface";
+import {CampaignLiveStatusEntity} from "./campaign-live-status.entity";
 
 @Entity()
 export class CampaignEntity {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryColumn({type: 'text'})
     id: string;
-
-    @Column({type: 'text'})
-    amplifyCampaignId: string;
 
     @Column()
     name: string;
@@ -44,17 +52,11 @@ export class CampaignEntity {
     @Column({enum: CampaignContentType, default: CampaignContentType.ARTICLES})
     contentType: CampaignContentType;
 
-    @OneToOne(type => BudgetEntity, budget => budget.campaign, {cascade: true, onDelete: 'CASCADE'})
-    budget: BudgetEntity;
-
     @Column({type: "text"})
     suffixTrackingCode: string;
 
     @Column({type: 'simple-json'})
     prefixTrackingCode: object;
-
-    @Column({type: "simple-json"})
-    liveStatus: object;
 
     @Column({type: "boolean"})
     readonly: boolean;
@@ -70,4 +72,10 @@ export class CampaignEntity {
 
     @Column({type: "text"})
     objective: string;
+
+    @ManyToOne(type => BudgetEntity, budget => budget.campaigns, {cascade: true})
+    budget: BudgetEntity;
+
+    @OneToOne(type => CampaignLiveStatusEntity, liveStatus => liveStatus.campaign, {cascade: true})
+    liveStatus: CampaignLiveStatusEntity;
 }

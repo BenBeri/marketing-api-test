@@ -1,6 +1,9 @@
 import {GetCampaignsResponseDto} from "../../shared/services/amplify/dtos/get-campaigns-response.dto";
 import {CampaignEntity} from "../models/domain/campaign.entity";
 import {BudgetEntity} from "../models/domain/budget.entity";
+import {CampaignCsvData} from "../interfaces/campaign-csv-data.interface";
+import {SectionEntity} from "../models/domain/section.entity";
+import {CampaignLiveStatusEntity} from "../models/domain/campaign-live-status.entity";
 
 export const transformCampaignsDtosToEntities = (dtos: GetCampaignsResponseDto[]): CampaignEntity[] => {
     return dtos.map(dto => transformCampaignDtoToEntity(dto));
@@ -8,7 +11,7 @@ export const transformCampaignsDtosToEntities = (dtos: GetCampaignsResponseDto[]
 
 export const transformCampaignDtoToEntity = (dto: GetCampaignsResponseDto): CampaignEntity => {
   const entity: CampaignEntity = new CampaignEntity();
-  entity.amplifyCampaignId = dto.id;
+  entity.id = dto.id;
   entity.name = dto.name;
   entity.enabled = dto.enabled;
   entity.campaignCreationTime = dto.creationTime;
@@ -20,9 +23,26 @@ export const transformCampaignDtoToEntity = (dto: GetCampaignsResponseDto): Camp
   entity.targeting = dto.targeting;
   entity.marketerId = dto.marketerId;
   entity.contentType = dto.contentType;
+  entity.suffixTrackingCode = dto.suffixTrackingCode;
+  entity.prefixTrackingCode = dto.prefixTrackingCode;
+
+  const liveStatus = new CampaignLiveStatusEntity();
+  liveStatus.campaign = entity;
+  liveStatus.amountSpent = dto.liveStatus.amountSpent;
+  liveStatus.campaignOnAir = dto.liveStatus.campaignOnAir;
+  liveStatus.onAirModificationTime = dto.liveStatus.onAirModificationTime;
+  liveStatus.onAirReason = dto.liveStatus.onAirReason;
+
+  entity.liveStatus = liveStatus;
+
+  entity.readonly = dto.readonly;
+  entity.startHour = dto.startHour;
+  entity.onAirType = dto.onAirType;
+  entity.promotedLinksSequences = dto.promotedLinksSequences;
+  entity.objective = dto.objective;
 
   const budget: BudgetEntity = new BudgetEntity();
-  budget.amplifyBudgetId = dto.budget.id;
+  budget.id = dto.budget.id;
   budget.name = dto.budget.name;
   budget.shared = dto.budget.shared;
   budget.amount = dto.budget.amount;
@@ -34,15 +54,34 @@ export const transformCampaignDtoToEntity = (dto: GetCampaignsResponseDto): Camp
   budget.type = dto.budget.type;
   budget.pacing = dto.budget.pacing;
 
+  const sections: SectionEntity[] = [];
+
+  for (const section of dto.budget.sections) {
+    const sectionEntity: SectionEntity = new SectionEntity();
+    sectionEntity.id = section.metadata.id;
+    sectionEntity.metadata = section.metadata;
+    sectionEntity.metrics = section.metrics;
+
+    sections.push(sectionEntity);
+  }
+
+  console.log(sections, sections.length);
+
+  budget.sections = sections;
+
   entity.budget = budget;
-  entity.suffixTrackingCode = dto.suffixTrackingCode;
-  entity.prefixTrackingCode = dto.prefixTrackingCode;
-  entity.liveStatus = dto.liveStatus;
-  entity.readonly = dto.readonly;
-  entity.startHour = dto.startHour;
-  entity.onAirType = dto.onAirType;
-  entity.promotedLinksSequences = dto.promotedLinksSequences;
-  entity.objective = dto.objective;
 
   return entity;
+};
+
+export const transformCampaignDataToCsvData = (campaign: CampaignEntity): CampaignCsvData => {
+
+    return {
+      id: campaign.id,
+      name: campaign.name,
+      budgetAmount: campaign.budget.amount,
+      creationTime: campaign.campaignCreationTime,
+      amountSpent: campaign.liveStatus.amountSpent,
+      sectionIds: campaign.budget.sections.map(section => section.metadata.id),
+    }
 };

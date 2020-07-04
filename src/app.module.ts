@@ -7,20 +7,18 @@ import {APP_FILTER, APP_INTERCEPTOR} from '@nestjs/core';
 import {CacheInterceptor} from './interceptors/cache.interceptor';
 import {TimeoutInterceptor} from './interceptors/timeout.interceptor';
 import {AllExceptionsFilter} from './exceptions/http-exception.filter';
-import {AppHealthIndicator} from './modules/app/health/app.health';
-import {TerminusOptionsService} from './modules/app/services/terminus-options.service';
-import {TerminusModule} from '@nestjs/terminus';
 import {MarketModule} from './modules/market/market.module';
 import {LoggerModule} from './logger/logger.module';
-import {CampaignScheduler} from "./schedulers/campaign.scheduler";
 import {CronSchedulersModule} from "./schedulers/cron-schedulers.module";
 import {ScheduleModule} from '@nestjs/schedule';
+import {join} from "path";
+import {ServeStaticModule} from '@nestjs/serve-static';
+
 
 @Module({
     imports: [
-        TerminusModule.forRootAsync({
-            imports: [AppModule],
-            useClass: TerminusOptionsService,
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'public'),
         }),
         TypeOrmModule.forRootAsync({
             imports: [DatabaseModule],
@@ -43,9 +41,8 @@ import {ScheduleModule} from '@nestjs/schedule';
             provide: APP_INTERCEPTOR,
             useClass: TimeoutInterceptor,
         },
-        AppHealthIndicator,
     ],
-    exports: [AppHealthIndicator],
+    exports: [],
 })
 
 export class AppModule {

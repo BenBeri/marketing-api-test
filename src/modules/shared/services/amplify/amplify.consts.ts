@@ -1,0 +1,1 @@
+export const MAX_SECTIONS_RESULT_LIMIT = 500;

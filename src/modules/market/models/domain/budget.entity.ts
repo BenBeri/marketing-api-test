@@ -1,21 +1,15 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
+import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
 import {CampaignContentType} from "../../enums/campaign-content-type.enum";
 import {BudgetType} from "../../enums/budget-type.enum";
 import {BudgetPacingType} from "../../enums/budget-pacing-type.enum";
 import {CampaignEntity} from "./campaign.entity";
+import {SectionEntity} from "./section.entity";
 
 @Entity()
 export class BudgetEntity {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryColumn({type: 'text'})
     id: string;
-
-    @OneToOne(type => CampaignEntity, campaign => campaign.budget, {onDelete: 'CASCADE'})
-    @JoinColumn()
-    campaign: CampaignEntity;
-
-    @Column({type: "text"})
-    amplifyBudgetId: string;
 
     @Column({type: "text"})
     name: string;
@@ -35,7 +29,7 @@ export class BudgetEntity {
     @Column({type: "timestamp"})
     lastModified: Date;
 
-    @Column({type: "date"})
+    @Column({type: "date", nullable: true})
     startDate: Date;
 
     @Column({type: "boolean"})
@@ -46,4 +40,12 @@ export class BudgetEntity {
 
     @Column({enum: BudgetPacingType})
     pacing: BudgetPacingType;
+
+    @OneToMany(type => CampaignEntity, campaign => campaign.budget)
+    @JoinColumn()
+    campaigns?: CampaignEntity[];
+
+    @OneToMany(type => SectionEntity, section => section.budget, {cascade: true})
+    @JoinColumn()
+    sections?: SectionEntity[];
 }

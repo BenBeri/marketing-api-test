@@ -1,14 +1,9 @@
 import {Injectable} from "@nestjs/common";
 import * as csvWriter from 'csv-writer';
 import {CampaignService} from "../services/campaign.service";
-import {SectionService} from "../services/section.service";
 import {CampaignCsvData} from "../interfaces/campaign-csv-data.interface";
-import {transformCampaignDataToCsvData, transformCampaignsDtosToEntities} from "../transformers/campaign.transformer";
+import {transformCampaignDataToCsvData} from "../transformers/campaign.transformer";
 import {CampaignEntity} from "../models/domain/campaign.entity";
-import {BudgetService} from "../services/budget.service";
-import {GetCampaignsResponseDto} from "../../shared/services/amplify/dtos/get-campaigns-response.dto";
-import {BudgetEntity} from "../models/domain/budget.entity";
-import {transformBudgetsDtosToModels} from "../transformers/budget.transformer";
 import {PUBLIC_ROOT} from "../../../main";
 
 @Injectable()
@@ -16,29 +11,7 @@ export class CampaignProvider {
 
     public constructor(
         private readonly campaignService: CampaignService,
-        private readonly budgetService: BudgetService,
-        private readonly sectionService: SectionService,
-    ) {}
-
-    public async addOrUpdateCampaigns(campaignDtos: GetCampaignsResponseDto[], budgetDtos: any[]) {
-        const oldCampaigns: CampaignEntity[] = await this.campaignService.getAllCampaignsAndDelete();
-        const oldBudgets: BudgetEntity[] = await this.budgetService.getAllBudgetsAndDelete();
-
-        const campaigns: CampaignEntity[] = transformCampaignsDtosToEntities(campaignDtos);
-        const budgets: BudgetEntity[] = transformBudgetsDtosToModels(budgetDtos);
-
-       // console.log(budgets);
-
-        try {
-            await this.campaignService.addAll(campaigns);
-            console.log('budgets', budgets);
-            await this.budgetService.addAll(budgets);
-        } catch (e) {
-            console.log('Failed to update campaigns', e.message);
-            await this.campaignService.addAll(oldCampaigns);
-            await this.budgetService.addAll(oldBudgets);
-            // TODO transaction instead of this later
-        }
+    ) {
     }
 
 

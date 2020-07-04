@@ -8,7 +8,6 @@ import {CampaignEntity} from "./models/domain/campaign.entity";
 import {SharedModule} from "../shared/shared.module";
 import {CampaignRepository} from "./repositories/campaign.repository";
 import {CampaignService} from "./services/campaign.service";
-import {SectionService} from "./services/section.service";
 import {CampaignProvider} from "./providers/campaign.provider";
 import {BudgetRepository} from "./repositories/budget.repository";
 import {BudgetService} from "./services/budget.service";
@@ -31,14 +30,12 @@ import {BudgetService} from "./services/budget.service";
     controllers: [CampaignController],
     providers: [
         CampaignService,
-        SectionService,
         BudgetService,
 
         CampaignProvider,
     ],
     exports: [
         CampaignService,
-        SectionService,
         BudgetService,
         CampaignProvider,
     ],
